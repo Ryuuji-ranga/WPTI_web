@@ -2,182 +2,198 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name=″viewport″ content=″width=device-width, initial-scale=1.0″>
-    <title>
-        WPTI 診断フォーム
-    </title>
-    
-<style>
-    body {
-        font-family: "Hiragino Sans", sans-serif;
-        margin: 0 auto;
-        padding: 20px;
-        max-width: 800px;
-        line-height: 1.7;
-        background: #fafafa;
-    }
-    h1 { text-align: center; }
-    .question-box {
-        background: #fff;
-        padding: 15px;
-        margin: 20px 0;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-    }
-    .options label {
-        display: block;
-        margin: 6px 0;
-    }
-    button {
-        display: block;
-        margin: 30px auto;
-        padding: 10px 25px;
-        font-size: 18px;
-        border: none;
-        background: #0078ff;
-        color: #fff;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    #result {
-        background: #e8f4ff;
-        padding: 20px;
-        border-radius: 10px;
-        margin-top: 30px;
-        display: none;
-    }
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WPTI 診断フォーム</title>
+
+    <style>
+        body {
+            font-family: "Hiragino Sans", sans-serif;
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 800px;
+            line-height: 1.7;
+            background: #fafafa;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .question-box {
+            background: #fff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .options label {
+            display: block;
+            margin: 6px 0;
+        }
+
+        button {
+            display: block;
+            margin: 30px auto;
+            padding: 10px 25px;
+            font-size: 18px;
+            border: none;
+            background: #0078ff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            background: #e8f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+
+        select {
+            display: block;
+            margin-bottom: 15px;
+        }
+    </style>
 
 </head>
 <body>
+
     <header>
-        <h1>Hello, world!</h1>
+        <h1>WPTI 16タイプ診断</h1>
     </header>
-    
+
     <p>初めてのWeb公開をしてるテスト中です。</p>
-    
+
     <label>性別</label>
-    <select name=″gender″ required>
-        <option value=″″>選択してください</option>
-        <option value=″男性″>男性</option>
-        <option value=″女性″>女性</option>
-        <option value=″その他″>その他</option>
+    <select name="gender" required>
+        <option value="">選択してください</option>
+        <option value="男性">男性</option>
+        <option value="女性">女性</option>
+        <option value="その他">その他</option>
     </select>
-    
-    
-<h1>WPTI 16タイプ診断</h1>
-<p>各質問に対し、もっとも近い選択肢を選んでください。（1〜5の5段階）</p>
 
-<form id="wptiForm">
+    <label>年代</label>
+    <select name="age" required>
+        <option value="">選択してください</option>
+        <option value="10">10代</option>
+        <option value="20">20代</option>
+        <option value="30">30代</option>
+        <option value="40">40代</option>
+        <option value="50">50代</option>
+        <option value="100">60代以上</option>
+    </select>
 
-<!-- 質問リスト（16問） -->
-<script>
-const questions = [
-    { q: "新しい人や新しい仕事に触れると energize される？", axis: "WC", reverse: false },
-    { q: "複数の領域を行き来しながら働きたい？", axis: "WC", reverse: false },
-    { q: "同時に複数の仕事を進めるのが得意？", axis: "WC", reverse: false },
-    { q: "一つのことを深掘りして極めるほうが心地よい？", axis: "WC", reverse: true },
+    <p>各質問に対し、もっとも近い選択肢を選んでください。（1〜5の5段階）</p>
 
-    { q: "まず『実行可能性』を最初に考える？", axis: "PS", reverse: false },
-    { q: "データよりアイデア・未来の可能性を優先する？", axis: "PS", reverse: true },
-    { q: "計画を立てる際、具体的な手順から考え始める？", axis: "PS", reverse: false },
-    { q: "新しいアイデアを生み出すときワクワクする？", axis: "PS", reverse: true },
+    <form id="wptiForm">
 
-    { q: "とりあえず動いてみてから考えるタイプ？", axis: "TA", reverse: false },
-    { q: "締切間際になると一気に集中して動く？", axis: "TA", reverse: false },
-    { q: "完成度よりスピードを優先しがち？", axis: "TA", reverse: false },
-    { q: "不確実な状況でも動きながら調整できる？", axis: "TA", reverse: false },
+        <script>
+            const questions = [
+                { q: "新しい人や新しい仕事に触れるとエネルギーが湧く？", axis: "WC", reverse: false },
+                { q: "複数の領域を行き来しながら働きたい？", axis: "WC", reverse: false },
+                { q: "同時に複数の仕事を進めるのが得意？", axis: "WC", reverse: false },
+                { q: "一つのことを深掘りして極めるほうが心地よい？", axis: "WC", reverse: true },
 
-    { q: "一人で作業する時間に価値を感じる？", axis: "IO", reverse: false },
-    { q: "人と話すことでアイデアが広がる？", axis: "IO", reverse: true },
-    { q: "単独で責任を持って動く方がやりやすい？", axis: "IO", reverse: false },
-    { q: "チームの雰囲気を重視して仕事をしたい？", axis: "IO", reverse: true }
-];
-</script>
+                { q: "まず『実行可能性』を最初に考える？", axis: "PS", reverse: false },
+                { q: "データよりアイデア・未来の可能性を優先する？", axis: "PS", reverse: true },
+                { q: "計画を立てる際、具体的な手順から考え始める？", axis: "PS", reverse: false },
+                { q: "新しいアイデアを生み出すときワクワクする？", axis: "PS", reverse: true },
 
-<div id="questionContainer"></div>
+                { q: "とりあえず動いてみてから考えるタイプ？", axis: "TA", reverse: false },
+                { q: "締切間際になると一気に集中して動く？", axis: "TA", reverse: false },
+                { q: "完成度よりスピードを優先しがち？", axis: "TA", reverse: false },
+                { q: "不確実な状況でも動きながら調整できる？", axis: "TA", reverse: false },
 
-<button type="button" onclick="calculateWPTI()">診断する</button>
+                { q: "一人で作業する時間に価値を感じる？", axis: "IO", reverse: false },
+                { q: "人と話すことでアイデアが広がる？", axis: "IO", reverse: true },
+                { q: "単独で責任を持って動く方がやりやすい？", axis: "IO", reverse: false },
+                { q: "チームの雰囲気を重視して仕事をしたい？", axis: "IO", reverse: true }
+            ];
+        </script>
 
-</form>
+        <div id="questionContainer"></div>
 
-<div id="result"></div>
+        <button type="button" onclick="calculateWPTI()">診断する</button>
 
-<script>
-// --- 質問をDOMに生成 ---
-function loadQuestions() {
-    const container = document.getElementById("questionContainer");
-    questions.forEach((item, index) => {
-        const box = document.createElement("div");
-        box.className = "question-box";
-        box.innerHTML = `
-            <p><b>Q${index+1}. ${item.q}</b></p>
-            <div class="options">
-                <label><input type="radio" name="q${index}" value="1"> 1：左軸に強く当てはまる</label>
-                <label><input type="radio" name="q${index}" value="2"> 2：左軸にやや当てはまる</label>
-                <label><input type="radio" name="q${index}" value="3"> 3：どちらともいえない</label>
-                <label><input type="radio" name="q${index}" value="4"> 4：右軸にやや当てはまる</label>
-                <label><input type="radio" name="q${index}" value="5"> 5：右軸に強く当てはまる</label>
-            </div>
-        `;
-        container.appendChild(box);
-    });
-}
-loadQuestions();
+    </form>
 
+    <div id="result"></div>
 
-// --- 診断計算 ---
-function calculateWPTI() {
-    let scores = {
-        W: 0, C: 0,
-        P: 0, S: 0,
-        T: 0, A: 0,
-        I: 0, O: 0
-    };
-
-    for (let i = 0; i < questions.length; i++) {
-        const answer = document.querySelector(`input[name="q${i}"]:checked`);
-        if (!answer) {
-            alert(`Q${i+1} に回答していません`);
-            return;
+    <script>
+        function loadQuestions() {
+            const container = document.getElementById("questionContainer");
+            questions.forEach((item, index) => {
+                const box = document.createElement("div");
+                box.className = "question-box";
+                box.innerHTML = `
+                <p><b>Q${index + 1}. ${item.q}</b></p>
+                <div class="options">
+                    <label><input type="radio" name="q${index}" value="1"> 1：当てはまる</label>
+                    <label><input type="radio" name="q${index}" value="2"> 2：やや当てはまる</label>
+                    <label><input type="radio" name="q${index}" value="3"> 3：どちらともいえない</label>
+                    <label><input type="radio" name="q${index}" value="4"> 4：やや当てはまらない</label>
+                    <label><input type="radio" name="q${index}" value="5"> 5：当てはまらない</label>
+                </div>
+            `;
+                container.appendChild(box);
+            });
         }
-
-        let value = Number(answer.value);
-
-        const axis = questions[i].axis;
-        const reverse = questions[i].reverse;
-
-        // reverse の場合は5段階を反転
-        if (reverse) value = 6 - value;
-
-        // 軸ごとに振り分け
-        const left = value;        // 左軸スコア
-        const right = 6 - value;   // 右軸スコア
-
-        if (axis === "WC") { scores.W += left; scores.C += right; }
-        if (axis === "PS") { scores.P += left; scores.S += right; }
-        if (axis === "TA") { scores.T += left; scores.A += right; }
-        if (axis === "IO") { scores.I += left; scores.O += right; }
-    }
-
-    // タイプ決定
-    const type =
-        (scores.W >= scores.C ? "W" : "C") +
-        (scores.P >= scores.S ? "P" : "S") +
-        (scores.T >= scores.A ? "T" : "A") +
-        (scores.I >= scores.O ? "I" : "O");
-
-    document.getElementById("result").style.display = "block";
-    document.getElementById("result").innerHTML = `
-        <h2>あなたのWPTIタイプ：<b>${type}</b></h2>
-        <p>各軸スコア：</p>
-        <pre>${JSON.stringify(scores, null, 2)}</pre>
-        <p>※タイプ説明文は後で追加できます。</p>
-    `;
-}
-</script>
+        loadQuestions();
 
 
+        function calculateWPTI() {
+            let scores = { W: 0, C: 0, P: 0, S: 0, T: 0, A: 0, I: 0, O: 0 };
+
+            for (let i = 0; i < questions.length; i++) {
+                const answer = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!answer) { alert(`Q${i + 1}に回答していません`); return; }
+                let value = Number(answer.value);
+                const axis = questions[i].axis;
+                const reverse = questions[i].reverse;
+                if (reverse) value = 6 - value;
+                const left = value;
+                const right = 6 - value;
+                if (axis === "WC") { scores.W += left; scores.C += right; }
+                if (axis === "PS") { scores.P += left; scores.S += right; }
+                if (axis === "TA") { scores.T += left; scores.A += right; }
+                if (axis === "IO") { scores.I += left; scores.O += right; }
+            }
+
+            const type =
+                (scores.W >= scores.C ? "W" : "C") +
+                (scores.P >= scores.S ? "P" : "S") +
+                (scores.T >= scores.A ? "T" : "A") +
+                (scores.I >= scores.O ? "I" : "O");
+
+            document.getElementById("result").style.display = "block";
+            document.getElementById("result").innerHTML = `<h2>あなたのWPTIタイプ：<b>${type}</b></h2>`;
+
+            const gender = document.querySelector('select[name="gender"]').value;
+            const age = document.querySelector('select[name="age"]').value;
+
+            // ここを最新の /exec URL に変更してください
+            fetch("https://script.google.com/macros/s/AKfycbyLZxPRvB0wtE-pc1sgmRx1rAPSFDloAwh9Vf4aBCioMnVDneghU9HghjVvXfG1tIoGeg/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    gender: gender,
+                    age: age,
+                    type: type,
+                    scores: scores
+                })
+            })
+                .then(res => res.text())
+                .then(text => console.log("スプレッドシート送信完了:", text))
+                .catch(err => console.error("エラー:", err));
+        }
+    </script>
 
 </body>
 </html>
