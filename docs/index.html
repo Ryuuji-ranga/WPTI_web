@@ -179,7 +179,7 @@
             const age = document.querySelector('select[name="age"]').value;
 
             // ここを最新の /exec URL に変更してください
-            fetch("https://script.google.com/macros/s/AKfycbyLZxPRvB0wtE-pc1sgmRx1rAPSFDloAwh9Vf4aBCioMnVDneghU9HghjVvXfG1tIoGeg/exec", {
+            fetch("https://wpti-proxy-2yob2hq13-ryuji-rangas-projects.vercel.app/wpti", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -189,8 +189,8 @@
                     scores: scores
                 })
             })
-                .then(res => res.text())
-                .then(text => console.log("スプレッドシート送信完了:", text))
+                .then(res => res.json())
+                .then(data => console.log("中継サーバー送信完了:", data))
                 .catch(err => console.error("エラー:", err));
         }
     </script>
