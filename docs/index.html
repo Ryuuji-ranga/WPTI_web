@@ -177,14 +177,16 @@
 
             const gender = document.querySelector('select[name="gender"]').value;
             const age = document.querySelector('select[name="age"]').value;
+            const wptiType = calculateType(); // 計算済みタイプ
+            const scores = calculateScores();  // 計算済みスコア
 
-            fetch("https://wpti-proxy-nh5ncvml5-ryuji-rangas-projects.vercel.app/api/wpti", {
+            fetch("https://wpti-proxy-3pwgqtg4k-ryuji-rangas-projects.vercel.app/api/wpti", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gender, age, type, scores })
+                body: JSON.stringify({ gender, age, type: wptiType, scores })
             })
                 .then(res => res.json())
-                .then(data => console.log("中継完了:", data))
+                .then(data => console.log("中継サーバー送信完了:", data))
                 .catch(err => console.error("エラー:", err));
         }
     </script>
