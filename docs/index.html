@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WPTI 診断フォーム</title>
-
     <style>
         body {
             font-family: "Hiragino Sans", sans-serif;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            max-width: 800px;
-            line-height: 1.7;
             background: #fafafa;
+            line-height: 1.7;
         }
 
         h1 {
@@ -45,12 +44,13 @@
         }
 
         #result {
+            display: none;
             background: #e8f4ff;
             padding: 20px;
             border-radius: 10px;
             margin-top: 30px;
-            display: none;
         }
+
         label {
             display: block;
             margin-top: 15px;
@@ -61,15 +61,10 @@
             margin-bottom: 15px;
         }
     </style>
-
 </head>
 <body>
 
-    <header>
-        <h1>WPTI 16タイプ診断</h1>
-    </header>
-
-    <p>初めてのWeb公開をしてるテスト中です。</p>
+    <h1>WPTI 16タイプ診断</h1>
 
     <label>性別</label>
     <select name="gender" required>
@@ -93,103 +88,78 @@
     <p>各質問に対し、もっとも近い選択肢を選んでください。（1〜5の5段階）</p>
 
     <form id="wptiForm">
-
-        <script>
-            const questions = [
-                { q: "新しい人や新しい仕事に触れるとエネルギーが湧く？", axis: "WC", reverse: false },
-                { q: "複数の領域を行き来しながら働きたい？", axis: "WC", reverse: false },
-                { q: "同時に複数の仕事を進めるのが得意？", axis: "WC", reverse: false },
-                { q: "一つのことを深掘りして極めるほうが心地よい？", axis: "WC", reverse: true },
-
-                { q: "まず『実行可能性』を最初に考える？", axis: "PS", reverse: false },
-                { q: "データよりアイデア・未来の可能性を優先する？", axis: "PS", reverse: true },
-                { q: "計画を立てる際、具体的な手順から考え始める？", axis: "PS", reverse: false },
-                { q: "新しいアイデアを生み出すときワクワクする？", axis: "PS", reverse: true },
-
-                { q: "とりあえず動いてみてから考えるタイプ？", axis: "TA", reverse: false },
-                { q: "締切間際になると一気に集中して動く？", axis: "TA", reverse: false },
-                { q: "完成度よりスピードを優先しがち？", axis: "TA", reverse: false },
-                { q: "不確実な状況でも動きながら調整できる？", axis: "TA", reverse: false },
-
-                { q: "一人で作業する時間に価値を感じる？", axis: "IO", reverse: false },
-                { q: "人と話すことでアイデアが広がる？", axis: "IO", reverse: true },
-                { q: "単独で責任を持って動く方がやりやすい？", axis: "IO", reverse: false },
-                { q: "チームの雰囲気を重視して仕事をしたい？", axis: "IO", reverse: true }
-            ];
-        </script>
-
         <div id="questionContainer"></div>
-
         <button type="button" onclick="calculateWPTI()">診断する</button>
-
     </form>
 
     <div id="result"></div>
 
     <script>
+        const questions = [
+            { q: "新しい人や新しい仕事に触れるとエネルギーが湧く？", axis: "WC", reverse: false },
+            { q: "複数の領域を行き来しながら働きたい？", axis: "WC", reverse: false },
+            { q: "同時に複数の仕事を進めるのが得意？", axis: "WC", reverse: false },
+            { q: "一つのことを深掘りして極めるほうが心地よい？", axis: "WC", reverse: true },
+            { q: "まず『実行可能性』を最初に考える？", axis: "PS", reverse: false },
+            { q: "データよりアイデア・未来の可能性を優先する？", axis: "PS", reverse: true },
+            { q: "計画を立てる際、具体的な手順から考え始める？", axis: "PS", reverse: false },
+            { q: "新しいアイデアを生み出すときワクワクする？", axis: "PS", reverse: true },
+            { q: "とりあえず動いてみてから考えるタイプ？", axis: "TA", reverse: false },
+            { q: "締切間際になると一気に集中して動く？", axis: "TA", reverse: false },
+            { q: "完成度よりスピードを優先しがち？", axis: "TA", reverse: false },
+            { q: "不確実な状況でも動きながら調整できる？", axis: "TA", reverse: false },
+            { q: "一人で作業する時間に価値を感じる？", axis: "IO", reverse: false },
+            { q: "人と話すことでアイデアが広がる？", axis: "IO", reverse: true },
+            { q: "単独で責任を持って動く方がやりやすい？", axis: "IO", reverse: false },
+            { q: "チームの雰囲気を重視して仕事をしたい？", axis: "IO", reverse: true }
+        ];
+
         function loadQuestions() {
             const container = document.getElementById("questionContainer");
-            questions.forEach((item, index) => {
+            questions.forEach((item, i) => {
                 const box = document.createElement("div");
                 box.className = "question-box";
-                box.innerHTML = `
-                <p><b>Q${index + 1}. ${item.q}</b></p>
-                <div class="options">
-                    <label><input type="radio" name="q${index}" value="1"> 1：当てはまる</label>
-                    <label><input type="radio" name="q${index}" value="2"> 2：やや当てはまる</label>
-                    <label><input type="radio" name="q${index}" value="3"> 3：どちらともいえない</label>
-                    <label><input type="radio" name="q${index}" value="4"> 4：やや当てはまらない</label>
-                    <label><input type="radio" name="q${index}" value="5"> 5：当てはまらない</label>
-                </div>
-            `;
+                box.innerHTML = `<p><b>Q${i + 1}. ${item.q}</b></p>
+        <div class="options">
+          <label><input type="radio" name="q${i}" value="1">1：当てはまる</label>
+          <label><input type="radio" name="q${i}" value="2">2：やや当てはまる</label>
+          <label><input type="radio" name="q${i}" value="3">3：どちらともいえない</label>
+          <label><input type="radio" name="q${i}" value="4">4：やや当てはまらない</label>
+          <label><input type="radio" name="q${i}" value="5">5：当てはまらない</label>
+        </div>`;
                 container.appendChild(box);
             });
         }
         loadQuestions();
 
-
         function calculateWPTI() {
             let scores = { W: 0, C: 0, P: 0, S: 0, T: 0, A: 0, I: 0, O: 0 };
-
             for (let i = 0; i < questions.length; i++) {
                 const answer = document.querySelector(`input[name="q${i}"]:checked`);
-                if (!answer) { alert(`Q${i + 1} に回答していません`); return; }
-
+                if (!answer) { alert(`Q${i + 1}に回答していません`); return; }
                 let value = Number(answer.value);
-                const axis = questions[i].axis;
-                const reverse = questions[i].reverse;
-                if (reverse) value = 6 - value;
-
-                const left = value;
-                const right = 6 - value;
-
-                if (axis === "WC") { scores.W += left; scores.C += right; }
-                if (axis === "PS") { scores.P += left; scores.S += right; }
-                if (axis === "TA") { scores.T += left; scores.A += right; }
-                if (axis === "IO") { scores.I += left; scores.O += right; }
+                if (questions[i].reverse) value = 6 - value;
+                const left = value; const right = 6 - value;
+                if (questions[i].axis === "WC") { scores.W += left; scores.C += right; }
+                if (questions[i].axis === "PS") { scores.P += left; scores.S += right; }
+                if (questions[i].axis === "TA") { scores.T += left; scores.A += right; }
+                if (questions[i].axis === "IO") { scores.I += left; scores.O += right; }
             }
 
-            const type =
-                (scores.W >= scores.C ? "W" : "C") +
-                (scores.P >= scores.S ? "P" : "S") +
-                (scores.T >= scores.A ? "T" : "A") +
-                (scores.I >= scores.O ? "I" : "O");
-
+            const type = (scores.W >= scores.C ? "W" : "C") + (scores.P >= scores.S ? "P" : "S") + (scores.T >= scores.A ? "T" : "A") + (scores.I >= scores.O ? "I" : "O");
             document.getElementById("result").style.display = "block";
             document.getElementById("result").innerHTML = `<h2>あなたのWPTIタイプ：<b>${type}</b></h2>`;
 
-            // 性別・年代
             const gender = document.querySelector('select[name="gender"]').value;
             const age = document.querySelector('select[name="age"]').value;
 
-            // --- ここで fetch 送信 ---
-            fetch("https://wpti-proxy-3pwgqtg4k-ryuji-rangas-projects.vercel.app/api/wpti", {
+            fetch("https://wpti-proxy-f71m1fino-ryuji-rangas-projects.vercel.app/api/wpti", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ gender, age, type, scores })
             })
                 .then(res => res.json())
-                .then(data => console.log("中継サーバー送信完了:", data))
+                .then(data => console.log("送信完了:", data))
                 .catch(err => console.error("エラー:", err));
         }
     </script>
