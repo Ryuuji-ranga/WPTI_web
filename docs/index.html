@@ -153,13 +153,16 @@
 
             for (let i = 0; i < questions.length; i++) {
                 const answer = document.querySelector(`input[name="q${i}"]:checked`);
-                if (!answer) { alert(`Q${i + 1}に回答していません`); return; }
+                if (!answer) { alert(`Q${i + 1} に回答していません`); return; }
+
                 let value = Number(answer.value);
                 const axis = questions[i].axis;
                 const reverse = questions[i].reverse;
                 if (reverse) value = 6 - value;
+
                 const left = value;
                 const right = 6 - value;
+
                 if (axis === "WC") { scores.W += left; scores.C += right; }
                 if (axis === "PS") { scores.P += left; scores.S += right; }
                 if (axis === "TA") { scores.T += left; scores.A += right; }
@@ -175,15 +178,15 @@
             document.getElementById("result").style.display = "block";
             document.getElementById("result").innerHTML = `<h2>あなたのWPTIタイプ：<b>${type}</b></h2>`;
 
+            // 性別・年代
             const gender = document.querySelector('select[name="gender"]').value;
             const age = document.querySelector('select[name="age"]').value;
-            const wptiType = calculateType(); // 計算済みタイプ
-            const scoress = calculateScores();  // 計算済みスコア
 
-            fetch("https://wpti-proxy-3pwgqtg4k-ryuji-rangas-projects.vercel.app/api/wpti", {
+            // --- ここで fetch 送信 ---
+            fetch("https://wpti-proxy-xxxxx.vercel.app/api/wpti", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gender, age, type: wptiType, scores })
+                body: JSON.stringify({ gender, age, type, scores })
             })
                 .then(res => res.json())
                 .then(data => console.log("中継サーバー送信完了:", data))
