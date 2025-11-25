@@ -177,8 +177,6 @@
 
             const gender = document.querySelector('select[name="gender"]').value;
             const age = document.querySelector('select[name="age"]').value;
-            const type = "WPTIタイプ"; // 計算済み
-            const scores = { W: 1, C: 2, P: 3, S: 4, T: 1, A: 2, I: 3, O: 4 }; // 計算済みスコア
 
             fetch("https://wpti-proxy-nh5ncvml5-ryuji-rangas-projects.vercel.app/api/wpti", {
                 method: "POST",
