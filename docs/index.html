@@ -26,11 +26,6 @@
             border: 1px solid #ddd;
         }
 
-        .options label {
-            display: block;
-            margin: 6px 0;
-        }
-
         button {
             display: block;
             margin: 30px auto;
@@ -49,16 +44,6 @@
             padding: 20px;
             border-radius: 10px;
             margin-top: 30px;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-        }
-
-        select {
-            display: block;
-            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -95,72 +80,113 @@
     <div id="result"></div>
 
     <script>
+        // ==========================
+        //  質問データ
+        // ==========================
         const questions = [
-            { q: "新しい人や新しい仕事に触れるとエネルギーが湧く？", axis: "WC", reverse: false },
-            { q: "複数の領域を行き来しながら働きたい？", axis: "WC", reverse: false },
-            { q: "同時に複数の仕事を進めるのが得意？", axis: "WC", reverse: false },
-            { q: "一つのことを深掘りして極めるほうが心地よい？", axis: "WC", reverse: true },
-            { q: "まず『実行可能性』を最初に考える？", axis: "PS", reverse: false },
-            { q: "データよりアイデア・未来の可能性を優先する？", axis: "PS", reverse: true },
-            { q: "計画を立てる際、具体的な手順から考え始める？", axis: "PS", reverse: false },
-            { q: "新しいアイデアを生み出すときワクワクする？", axis: "PS", reverse: true },
-            { q: "とりあえず動いてみてから考えるタイプ？", axis: "TA", reverse: false },
-            { q: "締切間際になると一気に集中して動く？", axis: "TA", reverse: false },
-            { q: "完成度よりスピードを優先しがち？", axis: "TA", reverse: false },
-            { q: "不確実な状況でも動きながら調整できる？", axis: "TA", reverse: false },
-            { q: "一人で作業する時間に価値を感じる？", axis: "IO", reverse: false },
-            { q: "人と話すことでアイデアが広がる？", axis: "IO", reverse: true },
-            { q: "単独で責任を持って動く方がやりやすい？", axis: "IO", reverse: false },
-            { q: "チームの雰囲気を重視して仕事をしたい？", axis: "IO", reverse: true }
+            { q: "新しい人や新しい仕事に触れるとエネルギーが湧く？", axis: "DS", reverse: false },
+            { q: "複数の領域を行き来しながら働きたい？", axis: "DS", reverse: false },
+            { q: "同時に複数の仕事を進めるのが得意？", axis: "DS", reverse: false },
+            { q: "一つのことを深掘りして極めるほうが心地よい？", axis: "DS", reverse: true },
+            { q: "まず『実行可能性』を最初に考える？", axis: "AC", reverse: false },
+            { q: "データよりアイデア・未来の可能性を優先する？", axis: "AC", reverse: true },
+            { q: "計画を立てる際、具体的な手順から考え始める？", axis: "AC", reverse: false },
+            { q: "新しいアイデアを生み出すときワクワクする？", axis: "AC", reverse: true },
+            { q: "とりあえず動いてみてから考えるタイプ？", axis: "RM", reverse: false },
+            { q: "締切間際になると一気に集中して動く？", axis: "RM", reverse: false },
+            { q: "完成度よりスピードを優先しがち？", axis: "RM", reverse: false },
+            { q: "不確実な状況でも動きながら調整できる？", axis: "RM", reverse: false },
+            { q: "一人で作業する時間に価値を感じる？", axis: "TP", reverse: false },
+            { q: "人と話すことでアイデアが広がる？", axis: "TP", reverse: true },
+            { q: "単独で責任を持って動く方がやりやすい？", axis: "TP", reverse: false },
+            { q: "チームの雰囲気を重視して仕事をしたい？", axis: "TP", reverse: true }
         ];
 
+        // ==========================
+        //  タイプ説明データ
+        // ==========================
+        const typeDescriptions = {
+            "DART": "戦略指揮官：戦略的で行動力があり、技術理解も強いリーダータイプ。",
+            "DARP": "柔軟な助言者：人と分析の両面に強く、提案・営業力が高い。",
+            "DACT": "精密設計者：構造化・設計・発明に強いクリエイティブ技術者。",
+            "DACP": "理想の先導者：アイデア生成＆人を巻き込む未来創造型。",
+            "DMRT": "熟練技術者：慎重×技術で高品質アウトプットを出す技術者。",
+            "DMRP": "安定の管理者：現場を安定してまとめる管理・調整の達人。",
+            "DCRT": "迅速な創造者：高速で創造し技術を用いて形にする革新タイプ。",
+            "DCRP": "推進力のある創作者：人を巻き込みアイデアを実現する推進型クリエイター。",
+            "SART": "戦術の達人：裏方として技術でチームを支える戦術型エンジニア。",
+            "SARP": "洞察に優れた伝達者：相手を理解して論理的に提案できる営業タイプ。",
+            "SAMT": "系統の守り手：安全・正確・堅実なシステム運用の守護者。",
+            "SAMP": "信頼の分析者：数字とデータに強く、分析の精度が高い。",
+            "SCRT": "速やかな発明者：高速でクリエイティブ成果物を生み出すタイプ。",
+            "SCRP": "共感する企画者：共感しながら企画を作るプランナー。",
+            "SCMT": "技術に精通した職人：職人型のクリエイティブ技術者。",
+            "SCMP": "調和を生む設計者：丁寧で調和のとれたデザインが得意なタイプ。"
+        };
+
+        // ==========================
+        //  質問の表示
+        // ==========================
         function loadQuestions() {
             const container = document.getElementById("questionContainer");
             questions.forEach((item, i) => {
                 const box = document.createElement("div");
                 box.className = "question-box";
-                box.innerHTML = `<p><b>Q${i + 1}. ${item.q}</b></p>
-        <div class="options">
-          <label><input type="radio" name="q${i}" value="1">1：当てはまる</label>
-          <label><input type="radio" name="q${i}" value="2">2：やや当てはまる</label>
-          <label><input type="radio" name="q${i}" value="3">3：どちらともいえない</label>
-          <label><input type="radio" name="q${i}" value="4">4：やや当てはまらない</label>
-          <label><input type="radio" name="q${i}" value="5">5：当てはまらない</label>
-        </div>`;
+                box.innerHTML = `
+                    <p><b>Q${i + 1}. ${item.q}</b></p>
+                    <label><input type="radio" name="q${i}" value="1">1：当てはまる</label><br>
+                    <label><input type="radio" name="q${i}" value="2">2：やや当てはまる</label><br>
+                    <label><input type="radio" name="q${i}" value="3">3：どちらともいえない</label><br>
+                    <label><input type="radio" name="q${i}" value="4">4：やや当てはまらない</label><br>
+                    <label><input type="radio" name="q${i}" value="5">5：当てはまらない</label><br>
+                `;
                 container.appendChild(box);
             });
         }
         loadQuestions();
 
+        // ==========================
+        //  診断結果計算
+        // ==========================
         function calculateWPTI() {
-            let scores = { W: 0, C: 0, P: 0, S: 0, T: 0, A: 0, I: 0, O: 0 };
+            let scores = { D: 0, S: 0, A: 0, C: 0, R: 0, M: 0, T: 0, P: 0 };
+
             for (let i = 0; i < questions.length; i++) {
                 const answer = document.querySelector(`input[name="q${i}"]:checked`);
                 if (!answer) { alert(`Q${i + 1}に回答していません`); return; }
+
                 let value = Number(answer.value);
                 if (questions[i].reverse) value = 6 - value;
-                const left = value; const right = 6 - value;
-                if (questions[i].axis === "WC") { scores.W += left; scores.C += right; }
-                if (questions[i].axis === "PS") { scores.P += left; scores.S += right; }
-                if (questions[i].axis === "TA") { scores.T += left; scores.A += right; }
-                if (questions[i].axis === "IO") { scores.I += left; scores.O += right; }
+
+                const left = value;
+                const right = 6 - value;
+
+                if (questions[i].axis === "DS") { scores.D += left; scores.S += right; }
+                if (questions[i].axis === "AC") { scores.A += left; scores.C += right; }
+                if (questions[i].axis === "RM") { scores.R += left; scores.M += right; }
+                if (questions[i].axis === "TP") { scores.T += left; scores.P += right; }
             }
 
-            const type = (scores.W >= scores.C ? "W" : "C") + (scores.P >= scores.S ? "P" : "S") + (scores.T >= scores.A ? "T" : "A") + (scores.I >= scores.O ? "I" : "O");
+            const type =
+                (scores.D >= scores.S ? "D" : "S") +
+                (scores.A >= scores.C ? "A" : "C") +
+                (scores.R >= scores.M ? "R" : "M") +
+                (scores.T >= scores.P ? "T" : "P");
+
             document.getElementById("result").style.display = "block";
-            document.getElementById("result").innerHTML = `<h2>あなたのWPTIタイプ：<b>${type}</b></h2>`;
+            document.getElementById("result").innerHTML = `
+                <h2>あなたのWPTIタイプ：<b>${type}</b></h2>
+                <p>${typeDescriptions[type]}</p>
+            `;
 
             const gender = document.querySelector('select[name="gender"]').value;
             const age = document.querySelector('select[name="age"]').value;
 
             fetch("/api/wpti", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": application / json },
                 body: JSON.stringify({ gender, age, type, scores })
-            })
-                .then(res => res.json())
-                .then(data => console.log("送信完了:", data))
-                .catch(err => console.error("エラー:", err));
+            });
         }
     </script>
 
