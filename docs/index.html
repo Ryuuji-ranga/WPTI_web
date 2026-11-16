@@ -1,194 +1,451 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WPTI 診断フォーム</title>
-    <style>
-        body {
-            font-family: "Hiragino Sans", sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fafafa;
-            line-height: 1.7;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>りおちゃんの好きなところ100こ</title>
+<meta name="description" content="りおちゃんの好きなところを100個、ぜんぶ伝えます。">
+<meta property="og:title" content="りおちゃんの好きなところ100こ">
+<meta property="og:description" content="りおちゃんの好きなところを100個、ぜんぶ伝えます。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💗</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff1f4;
+    --dot: #ffd3de;
+    --ink: #5c2a3e;
+    --berry: #e8457f;
+    --berry-deep: #c92a64;
+    --pink: #ffd6e2;
+    --lavender: #e6dbff;
+    --mint: #d2f2e3;
+    --butter: #fff0b5;
+    --sky: #d5ebff;
+    --peach: #ffe0cc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #3a1c2a;
+      --dot: #4a2536;
+      --ink: #ffe9ef;
+      --berry: #ff7aa8;
+      --berry-deep: #ff9bbf;
+      --pink: #7a3a55;
+      --lavender: #5a477f;
+      --mint: #3f6b5a;
+      --butter: #7d6a2e;
+      --sky: #3f5f85;
+      --peach: #86553c;
+    }
+    .card { color: #fff; border-color: #3a1c2a; }
+    .gauge { background: #4a2536; }
+    dialog { background: #4a2536; }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+    color: var(--ink);
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--dot) 2.5px, transparent 3px);
+    background-size: 28px 28px;
+    line-height: 1.7;
+  }
 
-        h1 {
-            text-align: center;
-        }
+  /* ---------- hero ---------- */
+  .hero {
+    text-align: center;
+    padding: 72px 20px 36px;
+  }
+  .hero .small {
+    display: inline-block;
+    background: #fff;
+    color: var(--berry-deep);
+    font-weight: 700;
+    padding: 4px 16px;
+    border-radius: 999px;
+    border: 3px dashed var(--berry);
+    transform: rotate(-3deg);
+    margin: 0 0 18px;
+  }
+  @media (prefers-color-scheme: dark) { .hero .small { background: #4a2536; } }
+  .hero h1 {
+    margin: 0;
+    font-weight: 900;
+    font-size: clamp(2.2rem, 9vw, 4.6rem);
+    line-height: 1.25;
+    letter-spacing: .02em;
+    color: var(--berry);
+    text-shadow: 3px 3px 0 #fff, 6px 6px 0 var(--pink);
+  }
+  @media (prefers-color-scheme: dark) {
+    .hero h1 { text-shadow: 3px 3px 0 #3a1c2a, 6px 6px 0 var(--pink); }
+  }
+  .hero h1 .num {
+    font-size: 1.5em;
+    display: inline-block;
+    transform: rotate(-4deg);
+  }
+  .hero p.lead {
+    max-width: 30em;
+    margin: 22px auto 28px;
+    font-weight: 500;
+  }
+  .btn {
+    font: inherit;
+    font-weight: 700;
+    color: #fff;
+    background: var(--berry);
+    border: 0;
+    border-radius: 999px;
+    padding: 14px 30px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 var(--berry-deep);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .btn:hover { transform: translateY(2px); box-shadow: 0 3px 0 var(--berry-deep); }
+  .btn:active { transform: translateY(5px); box-shadow: 0 0 0 var(--berry-deep); }
+  .btn:focus-visible, .card:focus-visible { outline: 4px solid var(--berry-deep); outline-offset: 3px; }
 
-        .question-box {
-            background: #fff;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
+  /* ---------- sticky heart gauge ---------- */
+  .gauge-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .gauge-box {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,.92);
+    border: 3px solid var(--berry);
+    border-radius: 999px;
+    padding: 6px 18px 6px 14px;
+    width: min(460px, 100%);
+    box-shadow: 0 4px 0 var(--pink);
+  }
+  @media (prefers-color-scheme: dark) { .gauge-box { background: rgba(58,28,42,.94); } }
+  .gauge-box .heart { font-size: 1.4rem; }
+  .gauge {
+    flex: 1;
+    height: 14px;
+    border-radius: 999px;
+    background: var(--pink);
+    overflow: hidden;
+  }
+  .gauge i {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: repeating-linear-gradient(45deg, var(--berry) 0 10px, #ff8fb4 10px 20px);
+    transition: width .3s ease;
+  }
+  .gauge-count { font-weight: 900; color: var(--berry-deep); min-width: 4.6em; text-align: right; font-variant-numeric: tabular-nums; }
 
-        button {
-            display: block;
-            margin: 30px auto;
-            padding: 10px 25px;
-            font-size: 18px;
-            border: none;
-            background: #0078ff;
-            color: #fff;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+  /* ---------- cards ---------- */
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 18px 40px; }
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 22px 18px;
+  }
+  .card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 130px;
+    padding: 34px 16px 20px;
+    border: 5px solid #fff;
+    border-radius: 26px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    box-shadow: 0 4px 0 rgba(201, 42, 100, .18);
+    cursor: pointer;
+    transition: transform .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .card:nth-child(6n+1) { background: var(--pink);     transform: rotate(-1.6deg); }
+  .card:nth-child(6n+2) { background: var(--lavender); transform: rotate(1.2deg); }
+  .card:nth-child(6n+3) { background: var(--mint);     transform: rotate(-0.8deg); }
+  .card:nth-child(6n+4) { background: var(--butter);   transform: rotate(1.8deg); }
+  .card:nth-child(6n+5) { background: var(--sky);      transform: rotate(-1.2deg); }
+  .card:nth-child(6n)   { background: var(--peach);    transform: rotate(0.9deg); }
+  .card:hover { transform: rotate(0) scale(1.04); }
+  .card .no {
+    position: absolute;
+    top: -14px;
+    left: 12px;
+    min-width: 46px;
+    height: 34px;
+    padding: 0 12px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--berry);
+    color: #fff;
+    font-weight: 900;
+    font-size: .95rem;
+    border: 3px solid #fff;
+  }
+  @media (prefers-color-scheme: dark) { .card .no { border-color: #3a1c2a; } }
+  .card .pop {
+    position: absolute;
+    right: 10px;
+    bottom: 8px;
+    font-size: 1.15rem;
+    opacity: .35;
+    transition: opacity .2s, transform .2s;
+  }
+  .card.loved .pop { opacity: 1; animation: pop .45s ease; }
+  @keyframes pop { 0% { transform: scale(.4); } 60% { transform: scale(1.7); } 100% { transform: scale(1); } }
 
-        #result {
-            display: none;
-            background: #e8f4ff;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-        }
-    </style>
+  /* the 100th card is special */
+  .card.last {
+    grid-column: 1 / -1;
+    min-height: 170px;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    background: var(--berry);
+    color: #fff;
+    transform: rotate(0);
+  }
+  .card.last .no { background: #fff; color: var(--berry-deep); }
+
+  /* ---------- dialog ---------- */
+  dialog {
+    border: 6px solid #fff;
+    border-radius: 32px;
+    background: var(--pink);
+    color: var(--ink);
+    padding: 34px 26px 26px;
+    width: min(380px, 88vw);
+    text-align: center;
+    box-shadow: 0 10px 0 rgba(201, 42, 100, .25);
+  }
+  dialog::backdrop { background: rgba(92, 42, 62, .45); }
+  dialog .d-no { color: var(--berry-deep); font-weight: 900; }
+  dialog .d-text { font-size: 1.4rem; font-weight: 900; margin: 8px 0 22px; line-height: 1.5; }
+  dialog .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn.sub { background: #fff; color: var(--berry-deep); box-shadow: 0 5px 0 var(--pink); }
+  @media (prefers-color-scheme: dark) { .btn.sub { background: #3a1c2a; } }
+
+  /* ---------- footer ---------- */
+  footer { text-align: center; padding: 20px 20px 70px; font-weight: 700; color: var(--berry-deep); }
+  footer .big { font-size: 1.3rem; display: block; margin-bottom: 6px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .card, .btn, .gauge i { transition: none; }
+    .card.loved .pop { animation: none; }
+  }
+</style>
 </head>
 <body>
 
-    <h1>WPTI 16タイプ診断</h1>
+<header class="hero">
+  <p class="small">for りおちゃん</p>
+  <h1>すきなところ<br><span class="num">100</span>こ</h1>
+  <p class="lead">ぜんぶ、ちゃんと本当です。<br>スクロールして、ぜんぶ受け取ってね。</p>
+  <button class="btn" id="random" type="button">ランダムで1つ見る</button>
+</header>
 
-    <label>性別</label>
-    <select name="gender" required>
-        <option value="">選択してください</option>
-        <option value="男性">男性</option>
-        <option value="女性">女性</option>
-        <option value="その他">その他</option>
-    </select>
+<div class="gauge-wrap">
+  <div class="gauge-box" role="status" aria-live="off">
+    <span class="heart" aria-hidden="true">💗</span>
+    <div class="gauge" aria-hidden="true"><i id="bar"></i></div>
+    <span class="gauge-count"><span id="count">0</span> / 100</span>
+  </div>
+</div>
 
-    <label>年代</label>
-    <select name="age" required>
-        <option value="">選択してください</option>
-        <option value="10">10代</option>
-        <option value="20">20代</option>
-        <option value="30">30代</option>
-        <option value="40">40代</option>
-        <option value="50">50代</option>
-        <option value="100">60代以上</option>
-    </select>
+<main>
+  <ol class="grid" id="grid"></ol>
+</main>
 
-    <p>各質問に対し、もっとも近い選択肢を選んでください。（1〜5の5段階）</p>
+<footer>
+  <span class="big">これで100こ。でも、まだまだ増えるよ。</span>
+  ずっと、だいすき。
+</footer>
 
-    <form id="wptiForm">
-        <div id="questionContainer"></div>
-        <button type="button" onclick="calculateWPTI()">診断する</button>
-    </form>
+<dialog id="dlg">
+  <div class="d-no" id="dNo"></div>
+  <div class="d-text" id="dText"></div>
+  <div class="row">
+    <button class="btn" id="again" type="button">もう1つ</button>
+    <button class="btn sub" id="close" type="button">とじる</button>
+  </div>
+</dialog>
 
-    <div id="result"></div>
+<script>
+  /* ===========================================================
+     ここを書きかえると、ぜんぶ自分の言葉にできます。
+     ひとつ1行、全部で100個。
+     =========================================================== */
+  const reasons = [
+    "笑顔がかわいい",
+    "笑うと目が細くなる",
+    "笑い声が好き",
+    "声を聞くと落ち着く",
+    "名前を呼んでくれるときの声",
+    "「ありがとう」をちゃんと言える",
+    "「ごめんね」をすなおに言える",
+    "おいしそうに食べる",
+    "ほっぺがふくらむ",
+    "「ひと口ちょうだい」って言うところ",
+    "朝のぼんやり顔",
+    "寝ぐせもかわいい",
+    "眠そうな目",
+    "あくびがちいさい",
+    "くしゃっとなる笑顔",
+    "照れたときのほっぺ",
+    "照れかくしで話をそらすところ",
+    "手がちいさい",
+    "手をつなぐとあったかい",
+    "歩くペースを合わせてくれる",
+    "隣にいると安心する",
+    "話をちゃんと聞いてくれる",
+    "うなずき方がやさしい",
+    "あいづちがかわいい",
+    "一生けんめいなところ",
+    "がんばりやさん",
+    "がんばりすぎないか心配になるところ",
+    "弱音をはいてくれるとうれしい",
+    "負けずぎらいなところ",
+    "まっすぐなところ",
+    "うそがつけないところ",
+    "すぐ顔に出る",
+    "おこった顔もちょっとかわいい",
+    "ぷくっとふくれる",
+    "すぐ仲直りしてくれる",
+    "やさしいところ",
+    "まわりの人を大事にする",
+    "気づかいができる",
+    "ちょっとした変化に気づく",
+    "さりげなく助けてくれる",
+    "好きなものを話すときの目のかがやき",
+    "好きなことになると早口になる",
+    "新しいことに挑戦するところ",
+    "好奇心いっぱいなところ",
+    "感動してすぐ泣いちゃうところ",
+    "映画やドラマに本気で入りこむ",
+    "おいしいお店を見つけるのがうまい",
+    "かわいいものを見つけると声が上がる",
+    "おしゃれなところ",
+    "服えらびのセンスが好き",
+    "ふとしたしぐさが上品",
+    "姿勢がきれい",
+    "髪をかきあげるしぐさ",
+    "マフラーに顔をうずめるところ",
+    "寒がりなところ",
+    "暑いと「あつい〜」って言うところ",
+    "雨の日でも楽しそう",
+    "季節のイベントを楽しむところ",
+    "写真を撮るとき自然に笑ってる",
+    "ピースのしかたがかわいい",
+    "メッセージの返し方が好き",
+    "スタンプのセンスが好き",
+    "電話の声がちょっとやわらかい",
+    "「おはよう」のひとこと",
+    "「おやすみ」のひとこと",
+    "「いってらっしゃい」で元気が出る",
+    "「おかえり」でほっとする",
+    "一緒にいると時間がはやい",
+    "なにもしなくても楽しい",
+    "ふたりでだまっていても心地いい",
+    "なんでもない話で盛り上がれる",
+    "くだらないことで一緒に笑える",
+    "ツッコミがするどい",
+    "ボケもかわいい",
+    "たまに天然なところ",
+    "ちょっとドジなところ",
+    "失敗しても笑いに変える",
+    "切りかえが早い",
+    "前向きなところ",
+    "夢を話すときのわくわく顔",
+    "将来のことを一緒に考えてくれる",
+    "約束を大事にする",
+    "時間を大切にしてくれる",
+    "ひとつひとつ丁寧なところ",
+    "「いただきます」をちゃんと言う",
+    "「ごちそうさま」もちゃんと言う",
+    "好きな食べ物を食べるときの幸せ顔",
+    "甘いものを前にしたときのテンション",
+    "ひと口交換してくれる",
+    "一緒に選んだものが増えていくのがうれしい",
+    "思い出をちゃんと覚えてる",
+    "記念日を大切にしてくれる",
+    "そっと寄りかかってくるところ",
+    "ぎゅっとしたときのぬくもり",
+    "ふたりのときだけ見せる顔",
+    "ふとしたときの「すき」のひとこと",
+    "いっしょにいると素直になれる",
+    "会うたびにまた好きになる",
+    "りおちゃんが、りおちゃんでいてくれること"
+  ];
 
-    <script>
-        // ==========================
-        //  質問データ
-        // ==========================
-        const questions = [
-            { q: "新しい人や新しい仕事に触れるとエネルギーが湧く？", axis: "DS", reverse: false },
-            { q: "複数の領域を行き来しながら働きたい？", axis: "DS", reverse: false },
-            { q: "同時に複数の仕事を進めるのが得意？", axis: "DS", reverse: false },
-            { q: "一つのことを深掘りして極めるほうが心地よい？", axis: "DS", reverse: true },
-            { q: "まず『実行可能性』を最初に考える？", axis: "AC", reverse: false },
-            { q: "データよりアイデア・未来の可能性を優先する？", axis: "AC", reverse: true },
-            { q: "計画を立てる際、具体的な手順から考え始める？", axis: "AC", reverse: false },
-            { q: "新しいアイデアを生み出すときワクワクする？", axis: "AC", reverse: true },
-            { q: "とりあえず動いてみてから考えるタイプ？", axis: "RM", reverse: false },
-            { q: "締切間際になると一気に集中して動く？", axis: "RM", reverse: false },
-            { q: "完成度よりスピードを優先しがち？", axis: "RM", reverse: false },
-            { q: "不確実な状況でも動きながら調整できる？", axis: "RM", reverse: false },
-            { q: "一人で作業する時間に価値を感じる？", axis: "TP", reverse: false },
-            { q: "人と話すことでアイデアが広がる？", axis: "TP", reverse: true },
-            { q: "単独で責任を持って動く方がやりやすい？", axis: "TP", reverse: false },
-            { q: "チームの雰囲気を重視して仕事をしたい？", axis: "TP", reverse: true }
-        ];
+  const grid = document.getElementById("grid");
+  const bar = document.getElementById("bar");
+  const countEl = document.getElementById("count");
+  const total = reasons.length;
+  const seen = new Set();
 
-        // ==========================
-        //  タイプ説明データ
-        // ==========================
-        const typeDescriptions = {
-            "DART": "戦略指揮官：戦略的で行動力があり、技術理解も強いリーダータイプ。",
-            "DARP": "柔軟な助言者：人と分析の両面に強く、提案・営業力が高い。",
-            "DACT": "精密設計者：構造化・設計・発明に強いクリエイティブ技術者。",
-            "DACP": "理想の先導者：アイデア生成＆人を巻き込む未来創造型。",
-            "DMRT": "熟練技術者：慎重×技術で高品質アウトプットを出す技術者。",
-            "DMRP": "安定の管理者：現場を安定してまとめる管理・調整の達人。",
-            "DCRT": "迅速な創造者：高速で創造し技術を用いて形にする革新タイプ。",
-            "DCRP": "推進力のある創作者：人を巻き込みアイデアを実現する推進型クリエイター。",
-            "SART": "戦術の達人：裏方として技術でチームを支える戦術型エンジニア。",
-            "SARP": "洞察に優れた伝達者：相手を理解して論理的に提案できる営業タイプ。",
-            "SAMT": "系統の守り手：安全・正確・堅実なシステム運用の守護者。",
-            "SAMP": "信頼の分析者：数字とデータに強く、分析の精度が高い。",
-            "SCRT": "速やかな発明者：高速でクリエイティブ成果物を生み出すタイプ。",
-            "SCRP": "共感する企画者：共感しながら企画を作るプランナー。",
-            "SCMT": "技術に精通した職人：職人型のクリエイティブ技術者。",
-            "SCMP": "調和を生む設計者：丁寧で調和のとれたデザインが得意なタイプ。"
-        };
+  reasons.forEach((text, i) => {
+    const n = i + 1;
+    const li = document.createElement("li");
+    li.className = "card" + (n === total ? " last" : "");
+    li.tabIndex = 0;
+    li.dataset.n = n;
+    li.setAttribute("role", "button");
+    li.setAttribute("aria-label", n + "個目 " + text);
+    li.innerHTML = '<span class="no">' + n + '</span>' + text + '<span class="pop" aria-hidden="true">💗</span>';
+    const love = () => li.classList.add("loved");
+    li.addEventListener("click", love);
+    li.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); love(); } });
+    grid.appendChild(li);
+  });
 
-        // ==========================
-        //  質問の表示
-        // ==========================
-        function loadQuestions() {
-            const container = document.getElementById("questionContainer");
-            questions.forEach((item, i) => {
-                const box = document.createElement("div");
-                box.className = "question-box";
-                box.innerHTML = `
-                    <p><b>Q${i + 1}. ${item.q}</b></p>
-                    <label><input type="radio" name="q${i}" value="1">1：当てはまる</label><br>
-                    <label><input type="radio" name="q${i}" value="2">2：やや当てはまる</label><br>
-                    <label><input type="radio" name="q${i}" value="3">3：どちらともいえない</label><br>
-                    <label><input type="radio" name="q${i}" value="4">4：やや当てはまらない</label><br>
-                    <label><input type="radio" name="q${i}" value="5">5：当てはまらない</label><br>
-                `;
-                container.appendChild(box);
-            });
-        }
-        loadQuestions();
+  /* ゲージ: 画面に入ったカードの最大番号まで進む */
+  function update() {
+    const max = seen.size ? Math.max(...seen) : 0;
+    countEl.textContent = max;
+    bar.style.width = (max / total * 100) + "%";
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) seen.add(Number(en.target.dataset.n)); });
+    update();
+  }, { rootMargin: "0px 0px -8% 0px" });
+  document.querySelectorAll(".card").forEach(c => io.observe(c));
 
-        // ==========================
-        //  診断結果計算
-        // ==========================
-        function calculateWPTI() {
-            let scores = { D: 0, S: 0, A: 0, C: 0, R: 0, M: 0, T: 0, P: 0 };
-
-            for (let i = 0; i < questions.length; i++) {
-                const answer = document.querySelector(`input[name="q${i}"]:checked`);
-                if (!answer) { alert(`Q${i + 1}に回答していません`); return; }
-
-                let value = Number(answer.value);
-                if (questions[i].reverse) value = 6 - value;
-
-                const left = value;
-                const right = 6 - value;
-
-                if (questions[i].axis === "DS") { scores.D += left; scores.S += right; }
-                if (questions[i].axis === "AC") { scores.A += left; scores.C += right; }
-                if (questions[i].axis === "RM") { scores.R += left; scores.M += right; }
-                if (questions[i].axis === "TP") { scores.T += left; scores.P += right; }
-            }
-
-            const type =
-                (scores.D >= scores.S ? "D" : "S") +
-                (scores.A >= scores.C ? "A" : "C") +
-                (scores.R >= scores.M ? "R" : "M") +
-                (scores.T >= scores.P ? "T" : "P");
-
-            document.getElementById("result").style.display = "block";
-            document.getElementById("result").innerHTML = `
-                <h2>あなたのWPTIタイプ：<b>${type}</b></h2>
-                <p>${typeDescriptions[type]}</p>
-            `;
-
-            const gender = document.querySelector('select[name="gender"]').value;
-            const age = document.querySelector('select[name="age"]').value;
-
-            fetch("/api/wpti", {
-                method: "POST",
-                headers: { "Content-Type": application / json },
-                body: JSON.stringify({ gender, age, type, scores })
-            });
-        }
-    </script>
-
+  /* ランダム表示 */
+  const dlg = document.getElementById("dlg");
+  const dNo = document.getElementById("dNo");
+  const dText = document.getElementById("dText");
+  let last = -1;
+  function showRandom() {
+    let i;
+    do { i = Math.floor(Math.random() * total); } while (i === last && total > 1);
+    last = i;
+    dNo.textContent = (i + 1) + "個目";
+    dText.textContent = reasons[i];
+    if (!dlg.open) dlg.showModal();
+  }
+  document.getElementById("random").addEventListener("click", showRandom);
+  document.getElementById("again").addEventListener("click", showRandom);
+  document.getElementById("close").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+</script>
 </body>
 </html>
